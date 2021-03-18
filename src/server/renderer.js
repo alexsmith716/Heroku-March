@@ -26,14 +26,14 @@ import * as graphqlQueries from '../graphql/queries/queries';
 
 // -------------------------------------------------------------------
 
-const nodeStats = path.resolve(__dirname, '../../dist/node/loadable-stats.json');
+//	const nodeStats = path.resolve(__dirname, '../../dist/node/loadable-stats.json');
 const webStats = path.resolve(__dirname, '../../dist/web/loadable-stats.json');
-
-const targetPathNode = path.resolve(__dirname, '../../dist/node');
+//	const targetPathNode = path.resolve(__dirname, '../../dist/node');
 
 // -------------------------------------------------------------------
 
 export async function get(req, res) {
+
 	const history = createMemoryHistory({ initialEntries: [req.originalUrl] });
 
 	const preloadedState = initialStatePreloaded(req);
@@ -55,28 +55,12 @@ export async function get(req, res) {
 	const clientApollo = apolloClient({ uri: 'https://sleepy-wave-92667.herokuapp.com/graphql', ssrMode: true });
 
 	// =====================================================
-	const nodeExtractor = new ChunkExtractor({
-		statsFile: nodeStats,
-		outputPath: targetPathNode,
-	})
-	const { default: AppX } = nodeExtractor.requireEntrypoint();
-
-	const extractor = new ChunkExtractor({ statsFile: webStats });
+	//	const nodeExtractor = new ChunkExtractor({
+	//		statsFile: nodeStats,
+	//		outputPath: targetPathNode,
+	//	})
+	//	const { default: App } = nodeExtractor.requireEntrypoint();
 	// =====================================================
-
-	// =====================================================
-	const linkElements = extractor.getLinkElements();
-	const styleElements = extractor.getStyleElements();
-	const scriptElements = extractor.getScriptElements();
-	// =====================================================
-
-	function hydrate() {
-		res.write('<!DOCTYPE html>');
-		const stream = renderToNodeStream(<Html linkElements={linkElements} styleElements={styleElements} scriptElements={scriptElements} store={JSON.stringify(store)} />);
-		stream.pipe(res);
-	}
-
-	await asyncGetPromises(routes, req.path, store);
 
 	clientApollo.writeQuery({
 		query: gql`
@@ -89,78 +73,60 @@ export async function get(req, res) {
 		},
 	});
 
-	// ==========================================================================
+	const helmetContext = {};
+	const context = {};
+
+	const App = (
+		<HelmetProvider context={helmetContext}>
+			<ApolloProvider client={clientApollo}>
+				<Provider store={store}>
+					<Router history={history}>
+						<StaticRouter location={req.originalUrl} context={context}>
+							{renderRoutes(routes)}
+						</StaticRouter>
+					</Router>
+				</Provider>
+			</ApolloProvider>
+		</HelmetProvider>
+	);
+
+	if (context.url) {
+		return res.redirect(301, context.url);
+	}
+
+	const { location } = history;
+	const loc = location.pathname + location.search;
+
+	if (decodeURIComponent(req.originalUrl) !== decodeURIComponent(loc)) {
+		return res.redirect(301, location.pathname);
+	}
 
 	try {
 
-		const AppY = () => React.createElement(AppX);
+		await asyncGetPromises(routes, req.path, store);
 
-		const AppZ = JSON.stringify(AppY);
+		const extractor = new ChunkExtractor({ statsFile: webStats });
 
-		const helmetContext = {};
-		const context = {};
-
-		const App = (
-			<HelmetProvider context={helmetContext}>
-				<ApolloProvider client={clientApollo}>
-					<Provider store={store}>
-						<Router history={history}>
-							<StaticRouter location={req.originalUrl} context={context}>
-								{ AppZ }
-							</StaticRouter>
-						</Router>
-					</Provider>
-				</ApolloProvider>
-			</HelmetProvider>
-		);
-
-		// -------------------------------------------------------------------
-
-		if (context.url) {
-			return res.redirect(301, context.url);
-		}
-
-		const { location } = history;
-
-		const loc = location.pathname + location.search;
-		if (decodeURIComponent(req.originalUrl) !== decodeURIComponent(loc)) {
-			return res.redirect(301, location.pathname);
-		}
-
-		// =====================================================
-		const extractorZ = new ChunkExtractor({ statsFile: webStats });
-		// =====================================================
-
-		// =====================================================
-		const tree = extractorZ.collectChunks(App)
-		// =====================================================
+		const tree = extractor.collectChunks(App);
 
 		await getDataFromTree(tree);
 
-		// =====================================================
 		const content = renderToString(sheet.collectStyles(tree));
-		// =====================================================
 
-		// =====================================================
-		const linkElementsZ = extractorZ.getLinkElements();
-		const styleElementsZ = extractorZ.getStyleElements();
-		const scriptElementsZ = extractorZ.getScriptElements();
-		// =====================================================
+		const linkElements = extractor.getLinkElements();
+		const styleElements = extractor.getStyleElements();
+		const scriptElements = extractor.getScriptElements();
 
-		// =====================================================
 		const styledComponents = sheet.getStyleElement();
-		// =====================================================
 
-		// =====================================================
 		const storeState = JSON.stringify(store.getState());
 		const graphqlState = JSON.stringify(clientApollo.extract());
-		// =====================================================
 
 		const html = (
 			<Html
-				linkElements={linkElementsZ}
-				styleElements={styleElementsZ}
-				scriptElements={scriptElementsZ}
+				linkElements={linkElements}
+				styleElements={styleElements}
+				scriptElements={scriptElements}
 				store={storeState}
 				content={content}
 				styledComponents={styledComponents}
@@ -171,8 +137,7 @@ export async function get(req, res) {
 		const ssrHtml = `<!DOCTYPE html>${renderToString(html)}`;
 		return res.status(200).send(ssrHtml);
 	} catch (error) {
-		// return res.status(500).send(error);
-		res.status(500)
+		return res.status(500).send(error);
 		hydrate();
 	} finally {
 		sheet.seal()

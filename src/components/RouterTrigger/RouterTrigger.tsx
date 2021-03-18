@@ -6,7 +6,7 @@ export type Props = {
 	children: React.ReactNode;
 };
 
-export const RouterTrigger: React.FC<Props> = ({ triggerProp, children }) => {
+const RouterTrigger: React.FC<Props> = ({ triggerProp, children }) => {
 	const location = useLocation();
 	const [needTrigger, setNeedTrigger] = useState(false);
 	const [locationState, setLocationState] = useState(location);
@@ -50,3 +50,5 @@ export const RouterTrigger: React.FC<Props> = ({ triggerProp, children }) => {
 
 	return <Route location={prevLocationState || location} render={() => children} />;
 };
+
+export default RouterTrigger;
