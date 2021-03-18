@@ -14,7 +14,7 @@ import { ApolloProvider } from '@apollo/client';
 
 import { apolloClient } from '../apollo/apolloClient';
 import asyncGetPromises from '../utils/asyncGetPromises';
-import { RouterTrigger } from '../components/RouterTrigger/RouterTrigger';
+import RouterTrigger from '../components/RouterTrigger/RouterTrigger';
 import routes from './routes';
 import { apiClient } from '../helpers/apiClient';
 import configureStore from '../redux/configureStore';

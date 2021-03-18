@@ -14,3 +14,11 @@ Had to add option `outputPath` to `ChunkExtractor` for Heroku to recognize webpa
 As I read somewhere, "Heroku is easy to use, until it isn't."
 
 The GraphQL server now works on Heroku.
+
+
+### TO-DO:
+
+* not reading ThumbnailImage from cache
+* ThumbnailImage breaks
+* book.title breaks
+* book.description breaks
