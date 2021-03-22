@@ -6,14 +6,14 @@ const AboutB = () => {
 
 	return (
 		<>
-			<Helmet title="About Us" />
+			<Helmet title="About B" />
 
 			{/* ---------------------------------------------- */}
 
 			<div className="container">
 				{/* ---------------------------------------------- */}
 
-				<h1 className="mt-4 mb-3">AboutBBBBBB</h1>
+				<h1 className="mt-4 mb-3">AboutB</h1>
 
 				{/* ---------------------------------------------- */}
 

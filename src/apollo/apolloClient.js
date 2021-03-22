@@ -2,17 +2,16 @@ import { ApolloClient, InMemoryCache, makeVar, createHttpLink, ApolloLink } from
 import { onError } from '@apollo/client/link/error';
 import fetch from 'isomorphic-fetch';
 
-const googleBooksLastSearchStringInit = {
-	lastSearchString: '',
+const googleBooksCurrentSearchStringInit = {
+	currentSearchString: '',
 };
 
-const charactersLastSearchStringInit = {
-	lastSearchString: '',
+const charactersCurrentSearchStringInit = {
+	currentSearchString: '',
 };
 
-export const googleBooksLastSearchStringVar = makeVar(googleBooksLastSearchStringInit);
-
-export const charactersLastSearchStringVar = makeVar(charactersLastSearchStringInit);
+export const googleBooksCurrentSearchStringVar = makeVar(googleBooksCurrentSearchStringInit);
+export const charactersCurrentSearchStringVar = makeVar(charactersCurrentSearchStringInit);
 
 export function apolloClient({ uri, ssrMode = false }) {
 
@@ -30,14 +29,14 @@ export function apolloClient({ uri, ssrMode = false }) {
 		typePolicies: {
 			Query: {
 				fields: {
-					googleBooksLastSearchString: {
+					googleBooksCurrentSearchString: {
 						read() {
-							return googleBooksLastSearchStringVar();
+							return googleBooksCurrentSearchStringVar();
 						},
 					},
-					charactersLastSearchString: {
+					charactersCurrentSearchString: {
 						read() {
-							return charactersLastSearchStringVar();
+							return charactersCurrentSearchStringVar();
 						},
 					},
 					// --------------------------------------
@@ -106,7 +105,7 @@ export function apolloClient({ uri, ssrMode = false }) {
 				errorPolicy: 'all',
 			},
 			query: {
-				// fetchPolicy: 'network-only',
+				// fetchPolicy: 'cache-and-network',
 				errorPolicy: 'all',
 			},
 			mutate: {

@@ -1,10 +1,10 @@
-import createSetGoogleBooksLastSearchStringVar from './setGoogleBooksLastSearchStringVar';
-import createSetCharactersLastSearchStringVar from './setCharactersLastSearchStringVar';
+import createSetGoogleBooksCurrentSearchStringVar from './setGoogleBooksCurrentSearchStringVar';
+import createSetCharactersCurrentSearchStringVar from './setCharactersCurrentSearchStringVar';
 
-import { googleBooksLastSearchStringVar } from '../../../apollo/apolloClient';
-import { charactersLastSearchStringVar } from '../../../apollo/apolloClient';
+import { googleBooksCurrentSearchStringVar } from '../../../apollo/apolloClient';
+import { charactersCurrentSearchStringVar } from '../../../apollo/apolloClient';
 
 export const reactiveVariableMutations = {
-  setGoogleBooksLastSearchStringVar: createSetGoogleBooksLastSearchStringVar(googleBooksLastSearchStringVar),
-	setCharactersLastSearchStringVar: createSetCharactersLastSearchStringVar(charactersLastSearchStringVar),
+	setGoogleBooksCurrentSearchStringVar: createSetGoogleBooksCurrentSearchStringVar(googleBooksCurrentSearchStringVar),
+	setCharactersCurrentSearchStringVar: createSetCharactersCurrentSearchStringVar(charactersCurrentSearchStringVar),
 }

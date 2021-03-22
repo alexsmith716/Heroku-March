@@ -88,6 +88,6 @@
 		"webpack-node-externals": "^2.5.2"
 	},
 	"engines": {
-		"node": "15.11.0"
+		"node": "15.12.0"
 	}
 }

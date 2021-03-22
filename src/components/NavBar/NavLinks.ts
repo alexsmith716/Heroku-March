@@ -16,7 +16,7 @@ export const NavLinks = [
 	},
 	{
 		title: 'REST',
-		url: 'restfulexample',
+		url: '/restfulexample',
 		linkType: 'navLink',
 	},
 	{
