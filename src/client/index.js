@@ -11,7 +11,6 @@ import localForage from 'localforage';
 import { getStoredState } from 'redux-persist';
 import { Provider } from 'react-redux';
 import { ApolloProvider } from '@apollo/client';
-
 import { apolloClient } from '../apollo/apolloClient';
 import asyncGetPromises from '../utils/asyncGetPromises';
 import RouterTrigger from '../components/RouterTrigger/RouterTrigger';

@@ -6,23 +6,24 @@ import {
 	useApolloClient,
 	NetworkStatus,
 	gql,
+	useReactiveVar,
 } from '@apollo/client';
 
-import { characterLastSearchStringVar } from '../../apollo/apolloClient';
+import { charactercurrentSearchStringVar } from '../../apollo/apolloClient';
 import { Loading } from '../../components/Loading';
 import Button from '../../components/Button';
 import { RickAndMortyCharacter } from '../../components/RickAndMortyCharacter';
-import { GET_RICK_AND_MORTY_CHARACTERS, GET_CHARACTERS_LAST_SEARCH_STRING } from '../../graphql/queries/queries.js';
+import { GET_RICK_AND_MORTY_CHARACTERS, GET_CHARACTERS_CURRENT_SEARCH_STRING } from '../../graphql/queries/queries.js';
+
 import { reactiveVariableMutations } from '../../graphql/operations/mutations';
-import { charactersLastSearchStringVar } from '../../apollo/apolloClient';
+import { charactersCurrentSearchStringVar, charactersCurrentSearchStringEVALVar } from '../../apollo/apolloClient';
 
 
 const GraphQLExample = () => {
 
 	const client = useApolloClient();
-	const { setCharactersLastSearchStringVar } = reactiveVariableMutations;
+	const { setCharactersCurrentSearchStringVar } = reactiveVariableMutations;
 
-	//  const [errorMessage, setErrorMessage] = useState(null);
 	const inputElement = useRef(null);
 	const [clientExtract, setClientExtract] = useState(null);
 	const [rickAndMortyCharactersInfo, setRickAndMortyCharactersInfo] = useState(false);
@@ -30,26 +31,25 @@ const GraphQLExample = () => {
 	const [rickAndMortyCharactersCurrentPage, setRickAndMortyCharactersCurrentPage] = useState(null);
 	const [rickAndMortyResults, setRickAndMortyResults] = useState(false);
 	const [toggleCacheView, setToggleCacheView] = useState(false);
-	// const lastSearchStringReactiveVar = useReactiveVar(charactersLastSearchStringVar);
+	const [skipUseQueryRefetch, setSkipUseQueryRefetch] = useState(false);
 
-	const {
-			loading: lastSearchStringLOADING, 
-			error: lastSearchStringERROR,
-			data: lastSearchStringDATA,
-			previousData,
-		} = useQuery(
-			GET_CHARACTERS_LAST_SEARCH_STRING,
-	);
+	const [componentDidMount, setComponentDidMount] = useState(false);
+	const currentSearchStringReactiveVar = useReactiveVar(charactersCurrentSearchStringVar);
 
-	const variables = {
-		filter: { name: `${rickAndMortyCharactersFilterName}`},
-	};
+	//  const {
+	//      loading: currentSearchStringLOADING, 
+	//      error: currentSearchStringERROR,
+	//      data: currentSearchStringDATA,
+	//      previousData: currentSearchStringPreviousDATA,
+	//    } = useQuery(
+	//      GET_CHARACTERS_CURRENT_SEARCH_STRING,
+	//  );
 
 	const [getRickAndMortyCharacters, {
-			loading: rickAndMortyCharactersLoading, 
+			loading: rickAndMortyCharactersLoading,
 			error: rickAndMortyCharactersError,
-			data: rickAndMortyCharactersData,
-			previousData: rickAndMortyCharactersPreviousData,
+			data: rickAndMortyCharactersDATA,
+			previousData: rickAndMortyCharactersPreviousDATA,
 			refetch,
 			fetchMore,
 			networkStatus,
@@ -57,14 +57,11 @@ const GraphQLExample = () => {
 		}] = useLazyQuery(
 			gql`${GET_RICK_AND_MORTY_CHARACTERS}`,
 			{
-				//  fetchPolicy: 'cache-and-network',
-				//  nextFetchPolicy: 'cache-first',
-				//  variables,
 				notifyOnNetworkStatusChange: true,
 				onCompleted: () => {
-					if (rickAndMortyCharactersData) {
-						const { characters: { info }} = rickAndMortyCharactersData;
-						const { characters: { results }} = rickAndMortyCharactersData;
+					if (rickAndMortyCharactersDATA) {
+						const { characters: { info }} = rickAndMortyCharactersDATA;
+						const { characters: { results }} = rickAndMortyCharactersDATA;
 						if (info) {
 							setRickAndMortyCharactersInfo(info);
 							if (!info.prev && info.next) {
@@ -84,44 +81,41 @@ const GraphQLExample = () => {
 	);
 
 	useEffect(() => {
-			if (lastSearchStringDATA) {
-				const { charactersLastSearchString: { lastSearchString }} = lastSearchStringDATA;
-				const previousCharacter = previousData?.charactersLastSearchString.lastSearchString;
+			if (!componentDidMount) {
+				setComponentDidMount(true);
+			}
 
-				if (lastSearchString !== '') {
+			if (componentDidMount) {
+				// console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ComponentDidMount >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+			}
+		},
+		[componentDidMount,]
+	);
 
-					if (!rickAndMortyCharactersData) {
-						getRickAndMortyCharacters({ variables: { filter: {name: lastSearchString }},})
+	useEffect(() => {
+			if (currentSearchStringReactiveVar) {
+				const currentSearchStringVar = currentSearchStringReactiveVar.currentSearchString;
+
+				if (currentSearchStringVar !== '') {
+					if (!rickAndMortyCharactersDATA) {
+						getRickAndMortyCharacters({ variables: { filter: {name: currentSearchStringVar }},});
 					}
 
-					if (rickAndMortyCharactersData) {
-
-						if (previousCharacter !== '') {
-
-							if (lastSearchString !== previousCharacter) {
-
-								if (rickAndMortyCharactersPreviousData) {
-									if (called) {
-										refetch({ filter: {name: lastSearchString }});
-									}
-								}
-
-								if (!rickAndMortyCharactersPreviousData) {
-									if (called) {
-										refetch({ filter: {name: lastSearchString }});
-									}
-								}
-							}
-						}
+					if (rickAndMortyCharactersDATA) {
+						refetch({ filter: {name: currentSearchStringVar }});
 					}
 				}
 			}
+		},
+		[currentSearchStringReactiveVar,]
+	);
 
+	useEffect(() => {
 			if (toggleCacheView) {
 				setClientExtract(client.extract());
 			}
 		},
-		[lastSearchStringDATA, toggleCacheView,]
+		[toggleCacheView, rickAndMortyCharactersDATA]
 	);
 
 	return (
@@ -141,7 +135,7 @@ const GraphQLExample = () => {
 					<div className="mb-3">
 
 						<div className="mb-3">
-							<h5>rickAndMortyCharactersData Data:</h5>
+							<h5>rickAndMortyCharactersDATA Data:</h5>
 						</div>
 
 						<div className="mb-3">
@@ -159,16 +153,16 @@ const GraphQLExample = () => {
 						</div>
 
 						<div>
-							{rickAndMortyCharactersData && rickAndMortyResults && (
+							{rickAndMortyCharactersDATA && rickAndMortyResults && (
 								<div>
-									{rickAndMortyCharactersData.characters.results.map((character, index) => (
+									{rickAndMortyCharactersDATA.characters.results.map((character, index) => (
 										<div key={index} className="mb-3 container-padding-border-radius-2">
 											<RickAndMortyCharacter character={ character } />
 										</div>
 									))}
 								</div>
 							)}
-							{rickAndMortyCharactersData && !rickAndMortyResults && (
+							{rickAndMortyCharactersDATA && !rickAndMortyResults && (
 								<div><b>Query Error: No data.</b></div>
 							)}
 						</div>
@@ -194,7 +188,7 @@ const GraphQLExample = () => {
 						<Button
 							type="button"
 							className="btn-success btn-md"
-							onClick={() => {console.log(charactersLastSearchStringVar())} }
+							onClick={() => {console.log(charactersCurrentSearchStringVar())} }
 							buttonText={"Read RV"}
 						/>
 					</div>
@@ -225,7 +219,7 @@ const GraphQLExample = () => {
 						<Button
 							type="button"
 							className={`btn-success btn-md`}
-							onClick={() => setCharactersLastSearchStringVar({lastSearchString: rickAndMortyCharactersFilterName})}
+							onClick={() => setCharactersCurrentSearchStringVar({currentSearchString: rickAndMortyCharactersFilterName})}
 							buttonText="Get Characters"
 						/>
 					</div>
@@ -234,7 +228,7 @@ const GraphQLExample = () => {
 						<Button
 							type="button"
 							className={`btn-success btn-md`}
-							onClick={() => setCharactersLastSearchStringVar({lastSearchString: 'Rick'})}
+							onClick={() => setCharactersCurrentSearchStringVar({currentSearchString: 'Rick'})}
 							buttonText="Get Rick"
 						/>
 					</div>
@@ -243,7 +237,7 @@ const GraphQLExample = () => {
 						<Button
 							type="button"
 							className={`btn-success btn-md`}
-							onClick={() => setCharactersLastSearchStringVar({lastSearchString: 'Beth'})}
+							onClick={() => setCharactersCurrentSearchStringVar({currentSearchString: 'Beth'})}
 							buttonText="Get Beth"
 						/>
 					</div>
@@ -252,12 +246,12 @@ const GraphQLExample = () => {
 						<Button
 							type="button"
 							className={`btn-success btn-md`}
-							onClick={() => setCharactersLastSearchStringVar({lastSearchString: 'Morty'})}
+							onClick={() => setCharactersCurrentSearchStringVar({currentSearchString: 'Morty'})}
 							buttonText="Get Morty"
 						/>
 					</div>
 
-					{rickAndMortyCharactersData && rickAndMortyCharactersInfo && (
+					{rickAndMortyCharactersDATA && rickAndMortyCharactersInfo && (
 						<div className="mb-3">
 							<Button
 								type="button"

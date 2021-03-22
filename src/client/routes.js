@@ -4,7 +4,7 @@ import Home from '../containers/Home/Home';
 import NotFound from '../containers/NotFound/Loadable';
 
 import About from '../containers/About/Loadable';
-import AboutB from '../containers/AboutBBB/Loadable';
+import AboutB from '../containers/AboutB/Loadable';
 import RESTfulExample from '../containers/RESTfulExample/Loadable';
 import GraphQLExample from '../containers/GraphQLExample/Loadable';
 import GraphiQLExample from '../containers/GraphiQLExample/Loadable';
