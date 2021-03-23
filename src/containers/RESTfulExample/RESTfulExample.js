@@ -189,7 +189,6 @@ const RESTfulExample = () => {
 							type="button"
 							className="btn-success btn-md"
 							onClick={() => setToggleCacheView(!toggleCacheView)}
-							//onClick={() => setClientExtract(client.extract())}
 							buttonText={!clientExtract ? "View Apollo Cache" : "Toggle Cache View"}
 						/>
 					</div>

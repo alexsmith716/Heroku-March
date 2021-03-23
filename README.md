@@ -5,20 +5,20 @@
 
 App deployed here:
 
-* https://sleepy-wave-92667.herokuapp.com/
-
-Took hours and hours to figure out but it works.
-
-Had to add option `outputPath` to `ChunkExtractor` for Heroku to recognize webpack node build.
-
-As I read somewhere, "Heroku is easy to use, until it isn't."
-
-The GraphQL server now works on Heroku.
+• https://sleepy-wave-92667.herokuapp.com/
 
 
 ### TO-DO:
 
-* not reading ThumbnailImage from cache
-* ThumbnailImage breaks
-* book.title breaks
-* book.description breaks
+• Integrate AWS Amplify
+• Add D3.js example
+
+
+### FYI:
+
+These previous Heroku apps are no longer working (but new ones on the way):
+
+• https://webpack-scss-react-redux-demo.herokuapp.com/
+• https://enigmatic-bayou-24376.herokuapp.com/
+• https://stark-badlands-43352.herokuapp.com/
+• https://webpack-scss-react-redux-demo.herokuapp.com/
