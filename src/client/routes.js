@@ -4,7 +4,7 @@ import Home from '../containers/Home/Home';
 import NotFound from '../containers/NotFound/Loadable';
 
 import About from '../containers/About/Loadable';
-import AboutB from '../containers/AboutB/Loadable';
+import AboutCSV from '../containers/AboutCSV/Loadable';
 import RESTfulExample from '../containers/RESTfulExample/Loadable';
 import GraphQLExample from '../containers/GraphQLExample/Loadable';
 import GraphiQLExample from '../containers/GraphiQLExample/Loadable';
@@ -34,20 +34,20 @@ const routes = [
 						loadData: preloadDataAbout,
 					},
 					{
-						path: '/aboutB',
+						path: '/aboutcsv',
 						exact: true,
-						component: AboutB,
+						component: AboutCSV,
 					},
 					{
 						path: '/restfulexample',
 						exact: true,
 						component: RESTfulExample,
 					},
-          {
-          	path: '/graphqlexample',
-          	exact: true,
-          	component: GraphQLExample,
-          },
+					{
+						path: '/graphqlexample',
+						exact: true,
+						component: GraphQLExample,
+					},
 					{
 						path: '/graphiqlexample',
 						exact: true,

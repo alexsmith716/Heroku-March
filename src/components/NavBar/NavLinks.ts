@@ -4,14 +4,9 @@ export const NavLinks = [
 		url: '/about',
 		linkType: 'navLink',
 	},
-	//  {
-	//  	title: 'AboutA',
-	//  	url: '/aboutA',
-	//  	linkType: 'navLink',
-	//  },
 	{
-		title: 'AboutB',
-		url: '/aboutB',
+		title: 'AboutCSV',
+		url: '/aboutcsv',
 		linkType: 'navLink',
 	},
 	{
