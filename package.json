@@ -25,6 +25,7 @@
 		"history": "^4.10.1",
 		"isomorphic-fetch": "^3.0.0",
 		"localforage": "^1.9.0",
+		"papaparse": "^5.3.0",
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1",
 		"react-helmet-async": "^1.0.9",
@@ -88,6 +89,6 @@
 		"webpack-node-externals": "^2.5.2"
 	},
 	"engines": {
-		"node": "15.12.0"
+		"node": "15.14.0"
 	}
 }
