@@ -1,13 +1,7 @@
 import cluster from 'cluster';
 import { cpus } from 'os';
 import { startServer } from './serverHeroku';
-//  import { startServer } from './serverLocal';
-
-//  global.__DISABLE_SSR__ = false;
-//  startServer();
-
-//  heroku fallback
-//  const CONCURRENCY = process.env.WEB_CONCURRENCY || 1;
+//	import { startServer } from './serverLocal';
 
 const numCPUs = cpus().length;
 

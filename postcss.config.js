@@ -6,6 +6,7 @@ module.exports = {
 		postcssPresetEnv({
 			stage: 2,
 		}),
+		//	require('autoprefixer')()
 	],
 };
 

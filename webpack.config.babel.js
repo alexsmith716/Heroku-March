@@ -162,6 +162,9 @@ const getConfig = target => ({
 			react: path.resolve('./node_modules/react'),
 			graphql: path.resolve('./node_modules/graphql'),
 		},
+		//	fallback: {
+		//		buffer: require.resolve('buffer/')
+		//	}
 	},
 
 	plugins: [
